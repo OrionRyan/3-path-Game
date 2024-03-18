@@ -1,0 +1,260 @@
+#Import libraries
+import random
+import pygame
+pygame.init()
+
+#Setup window
+w = pygame.display.set_mode([1000,800])
+w.fill((150,0,0))
+
+#Animation variables
+size = 0
+sizeSub = 175
+left_eye_size = 0
+begin = True
+top = pygame.Rect(0,125,1000,150)
+middle = pygame.Rect(0,325,1000,150)
+bottom = pygame.Rect(0,525,1000,150)
+topEnemyOffset = 1000
+middleEnemyOffset = 1000
+bottomEnemyOffset = 1000
+pos = 400
+topEnemy = False
+middleEnemy = False
+bottomEnemy = False
+
+#Time variables
+c = pygame.time.Clock()
+timer = 0
+speed = 10
+
+#Color variables
+white = (255,255,255)
+red = (175,0,0)
+
+#Setting up points for ending screen
+p1x = 0
+p1y = 0
+
+p2x = 0
+p2y = 0
+
+p3x = 0
+p3y = 0
+
+p4x = 0
+p4y = 0
+
+p5x = 0
+p5y = 0
+
+p6x = 0
+p6y = 0
+
+p7x = 0
+p7y = 0
+
+p8x = 0
+p8y = 0
+
+p9x = 0
+p9y = 0
+
+p10x = 0
+p10y = 0
+
+#Instructions
+print("Use the up and down arrow keys to avoid hitting any of the oncoming obstacles.")
+print("The speed of the obstacles will increase every 10 seconds.")
+print()
+input("Press enter when you're ready to begin. ")
+
+#Loop until user quits or an obstacle is hit
+running = True
+while running:
+    
+    #Increase speed every 10 seconds
+    timer += c.get_time()
+    if timer >= 10000:
+        speed += 10
+        print()
+        print("Speed increased...")
+        timer = 0
+    
+    #Event Loop
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            
+        #Controls
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                if pos > 200:
+                    pos -= 200
+            if event.key == pygame.K_DOWN:
+                if pos < 600:
+                    pos += 200
+    
+    #Drawing background
+    pygame.draw.rect(w, white, top, 10)
+    pygame.draw.rect(w, (212,175,91), top)
+    pygame.draw.rect(w, white, middle, 10)
+    pygame.draw.rect(w, (212,175,91), middle)
+    pygame.draw.rect(w, white, bottom, 10)
+    pygame.draw.rect(w, (212,175,91), bottom)
+    
+    #Draw character
+    pygame.draw.circle(w, (0,0,0), (75,pos), 60)
+    
+    #Setup a 1 in 30 chance for an enemy to spawn every frame
+    enemy = random.randint(1,30)
+    if enemy == 1:
+
+        #Determine which lane the enemy should spawn in
+        enemyPos = random.randint(1,3)
+        if enemyPos == 1:
+            topEnemy = True
+        elif enemyPos == 2:
+            middleEnemy = True
+        elif enemyPos == 3:
+            bottomEnemy = True
+
+    #Animate the enemy in the top lane
+    if topEnemy:
+        
+        #Draw and animate enemy
+        t = pygame.Rect(topEnemyOffset,135,130,130)
+        pygame.draw.rect(w, red, t)
+        topEnemyOffset -= speed
+        
+        #Reset enemy if it goes offscreen
+        if topEnemyOffset <= -130:
+            topEnemyOffset = 1000
+            topEnemy = False
+            
+        #Exit loop if user hits an enemy
+        if pos == 200 and topEnemyOffset >= -115 and topEnemyOffset <= 115:
+            break
+            
+    #Animate the enemy in the middle lane
+    if middleEnemy:
+        
+        #Draw and animate enemy
+        m = pygame.Rect(middleEnemyOffset,335,130,130)
+        pygame.draw.rect(w, red, m)
+        middleEnemyOffset -= speed
+        
+        #Reset enemy if it goes offscreen
+        if middleEnemyOffset <= -120:
+            middleEnemyOffset = 1000
+            middleEnemy = False
+            
+        #Exit loop if user hits an enemy
+        if pos == 400 and middleEnemyOffset >= -115 and middleEnemyOffset <= 115:
+            break
+            
+    #Animate the enemy in the top lane
+    if bottomEnemy:
+        
+        #Draw and animate enemy
+        b = pygame.Rect(bottomEnemyOffset,535,130,130)
+        pygame.draw.rect(w, red, b)
+        bottomEnemyOffset -= speed
+        
+        #Reset enemy if it goes offscreen
+        if bottomEnemyOffset <= -130:
+            bottomEnemyOffset = 1000
+            bottomEnemy = False
+            
+        #Exit loop if user hits an enemy
+        if pos == 600 and bottomEnemyOffset >= -115 and bottomEnemyOffset <= 115:
+            break
+    
+    #Show user drawing
+    pygame.display.flip()
+    
+    #Keeps a constant framerate
+    c.tick(60)
+
+#Gets the total time that the user lasted
+lasted = pygame.time.get_ticks()
+timer = 0
+
+while running:
+    
+    #Lets user see the end screen for one second
+    timer += c.get_time()
+    if timer >= 1000:
+        break
+    
+    #Event Loop
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    
+    #End screen
+    if begin:
+        
+        pygame.draw.circle(w, (0,0,0), (500,400), size)
+        pygame.draw.circle(w, (150,0,0), (350,300), size - sizeSub)
+        pygame.draw.circle(w, (50,50,50), (350,300), size - sizeSub, 5)
+        pygame.draw.circle(w, (150,0,0), (650,300), size - sizeSub)
+        pygame.draw.circle(w, (50,50,50), (650,300), size - sizeSub, 5)
+        
+        size += 40
+        sizeSub += 15
+            
+        p1x += 25
+        p1y += 6.11
+        p2x += 17.77
+        p2y += 2.22
+
+        p3x += 8.88
+        p3y += 5.55
+
+        p4x += 8.88
+        p4y += 5.55
+
+        p5x += 17.77
+        p5y += 2.22
+
+        p6x += 25
+        p6y += 6.11
+
+        p7x += 17.77
+        p7y += 2.22
+
+        p8x += 11.11
+        p8y += 1.11
+
+        p9x += 11.11
+        p9y += 1.11
+
+        p10x += 17.77
+        p10y += 2.22
+    
+        p1 = (500 - p1x, 580 - p1y)
+        p2 = (500 - p2x, 580 + p2y)
+        p3 = (500 - p3x, 580 + p3y)
+        p4 = (500 + p4x, 580 + p4y)
+        p5 = (500 + p5x, 580 + p5y)
+        p6 = (500 + p6x, 580 - p6y)
+        p7 = (500 + p7x, 580 - p7y)
+        p8 = (500 + p8x, 580 - p8y)
+        p9 = (500 - p9x, 580 - p9y)
+        p10 = (500 - p10x, 580 - p10y)
+    
+        pygame.draw.polygon(w, (150,0,0), [p1,p2,p3,p4,p5,p6,p7,p8,p9,p10])
+        pygame.draw.polygon(w, (50,50,50), [p1,p2,p3,p4,p5,p6,p7,p8,p9,p10], 5)
+
+        if size >= 450:
+            begin = False
+        
+        #Shows user drawing
+        pygame.display.flip()
+        
+    #Keeps a constant framerate
+    c.tick(60)
+
+#Tells user how long they lasted
+print("You lasted for " + str(lasted/1000) + " seconds!")
